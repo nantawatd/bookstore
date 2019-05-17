@@ -30,7 +30,7 @@ public class UserController {
 
 	@ApiOperation(value = "Create user", response = Void.class)
 	@PostMapping("/user")
-	public void createUser(@RequestBody UserTO user) {
+	public void createUser(@RequestBody UserTO user) throws BookstoreException {
 		userService.createUser(user);
 	}
 

@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.GET, "/books").permitAll()
 
 		.anyRequest().authenticated().and()
-		.formLogin().permitAll().and().logout().permitAll();
+		.formLogin().loginProcessingUrl("/login").permitAll().and().logout().permitAll();
 	}
 
 	@Override

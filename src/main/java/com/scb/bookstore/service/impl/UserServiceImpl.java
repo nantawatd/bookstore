@@ -74,8 +74,13 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void createUser(UserTO user) {
+	public void createUser(UserTO user) throws BookstoreException {
 		LOG.info("create user account.");
+
+		if(userRepository.countByUsername(user.getUsername()) > 0) {
+			throw new BookstoreException(BookstoreErrorMessage.USER_DUPLICATE);
+		}
+
 		//encode password.
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		UserDO userDO = UserDO.from(user);
