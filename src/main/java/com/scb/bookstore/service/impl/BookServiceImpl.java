@@ -11,14 +11,13 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import com.scb.bookstore.rest.dto.SCBBook;
+import com.scb.bookstore.config.CachingConfig;
+import com.scb.bookstore.rest.dto.response.SCBBookTO;
 import com.scb.bookstore.service.BookService;
 
 @Service
-@Transactional
 public class BookServiceImpl implements BookService{
 
 	@Value("${scb.book.all.url}")
@@ -32,14 +31,14 @@ public class BookServiceImpl implements BookService{
 
 	private static final Logger LOG = LoggerFactory.getLogger(BookServiceImpl.class);
 
-	@Cacheable("books")
+	@Cacheable(cacheNames = CachingConfig.BOOK_CACHE, key = "'" + CachingConfig.BOOK_CACHE_KEY + "'")
 	@Override
-	public List<SCBBook> getBooks() {
+	public List<SCBBookTO> getBooks() {
 		// get all books
-		List<SCBBook> scbAllBooks = getBooksFromSCBByUrl(allBooksUrl);
+		List<SCBBookTO> scbAllBooks = getBooksFromSCBByUrl(allBooksUrl);
 
 		// get recommend books
-		List<SCBBook> scbRecommendBooks = getBooksFromSCBByUrl(recommendBooksUrl);
+		List<SCBBookTO> scbRecommendBooks = getBooksFromSCBByUrl(recommendBooksUrl);
 
 		scbAllBooks = scbAllBooks.stream().map(book -> {
 			scbRecommendBooks.parallelStream().forEach(rec -> {
@@ -53,8 +52,8 @@ public class BookServiceImpl implements BookService{
 		return scbAllBooks;
 	}
 
-	private List<SCBBook> getBooksFromSCBByUrl(String scbBookUrl) {
+	private List<SCBBookTO> getBooksFromSCBByUrl(String scbBookUrl) {
 		LOG.info("call API {}", scbBookUrl);
-		return restTemplate.exchange(scbBookUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<SCBBook>>() {}).getBody();
+		return restTemplate.exchange(scbBookUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<SCBBookTO>>() {}).getBody();
 	}
 }

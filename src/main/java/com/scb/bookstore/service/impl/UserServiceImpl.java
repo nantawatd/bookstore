@@ -1,17 +1,22 @@
 package com.scb.bookstore.service.impl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.Cache.ValueWrapper;
+import org.springframework.cache.CacheManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.scb.bookstore.config.CachingConfig;
 import com.scb.bookstore.config.model.BookStoreUserDetails;
 import com.scb.bookstore.data.entity.OrderBookDO;
 import com.scb.bookstore.data.entity.OrderDO;
@@ -21,8 +26,10 @@ import com.scb.bookstore.data.repository.OrderRepository;
 import com.scb.bookstore.data.repository.RoleRepository;
 import com.scb.bookstore.data.repository.UserRepository;
 import com.scb.bookstore.rest.dto.Role;
-import com.scb.bookstore.rest.dto.UserOrderTO;
-import com.scb.bookstore.rest.dto.UserTO;
+import com.scb.bookstore.rest.dto.request.UserOrderTO;
+import com.scb.bookstore.rest.dto.request.UserTO;
+import com.scb.bookstore.rest.dto.response.OrderPriceTO;
+import com.scb.bookstore.rest.dto.response.SCBBookTO;
 import com.scb.bookstore.service.UserService;
 import com.scb.bookstore.service.exception.BookstoreErrorMessage;
 import com.scb.bookstore.service.exception.BookstoreException;
@@ -44,6 +51,9 @@ public class UserServiceImpl implements UserService{
 
 	@Autowired
 	private OrderBookRepository orderBookRepository;
+
+	@Autowired
+	private CacheManager cacheManager;
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -92,24 +102,46 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void orderBook(UserOrderTO order) throws BookstoreException {
+	public OrderPriceTO orderBook(UserOrderTO order) throws BookstoreException {
 		Optional<UserDO> userDO = getUserByAuthentication();
 		if (userDO.isPresent()) {
 
-			LOG.info("save customer order.");
-			OrderDO orderDO = new OrderDO(userDO.get(), new Date(), "PENDING");
+			double totalPrice = getTotalPriceFromBookID(order.getBookIds());
+			LOG.info("total price : {}", totalPrice);
+
+			LOG.info("save order.");
+			OrderDO orderDO = new OrderDO(userDO.get(), new Date(), totalPrice);
 			orderDO = orderRepository.save(orderDO);
 			Long orderId = orderDO.getId();
 
+			LOG.info("save customer order.");
 			order.getBookIds().forEach(bookId -> {
 				OrderBookDO orderBookDO = new OrderBookDO(bookId, orderId);
 				orderBookRepository.save(orderBookDO);
 			});
 
+			return new OrderPriceTO(totalPrice);
 
 		} else {
 			throw new BookstoreException(BookstoreErrorMessage.USER_NOT_FOUND);
 		}
+	}
+
+	private double getTotalPriceFromBookID(List<Long> bookIds) throws BookstoreException {
+		Cache cache = cacheManager.getCache(CachingConfig.BOOK_CACHE);
+		ValueWrapper bookWrapper = cache.get(CachingConfig.BOOK_CACHE_KEY);
+
+		if(bookWrapper == null) {
+			throw new BookstoreException(BookstoreErrorMessage.EMPTY_BOOK_LIST);
+		}
+
+		@SuppressWarnings("unchecked")
+		List<SCBBookTO> scbBooks = (List<SCBBookTO>) bookWrapper.get();
+
+		return scbBooks.stream()
+		.filter(book -> bookIds.contains(book.getId()))
+		.map(SCBBookTO::getPrice)
+		.mapToDouble(Double::doubleValue).sum();
 	}
 
 	private void validateUserId(Long id) throws BookstoreException {

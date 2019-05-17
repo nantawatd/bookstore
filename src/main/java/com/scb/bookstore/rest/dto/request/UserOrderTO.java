@@ -1,4 +1,4 @@
-package com.scb.bookstore.rest.dto;
+package com.scb.bookstore.rest.dto.request;
 
 import java.util.List;
 

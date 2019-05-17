@@ -31,16 +31,16 @@ public class OrderDO {
 	@OneToMany(mappedBy = "orderDO")
 	private Set<OrderBookDO> orderBookDOs;
 
-	private String status;
+	private Double price;
 
 	public OrderDO() {
 
 	}
 
-	public OrderDO(UserDO userDO, Date createdDate, String status) {
+	public OrderDO(UserDO userDO, Date createdDate, Double price) {
 		this.userDO = userDO;
 		this.createdDate = createdDate;
-		this.status = status;
+		this.price = price;
 	}
 
 	public Long getId() {
@@ -67,19 +67,19 @@ public class OrderDO {
 		this.userDO = userDO;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	public Set<OrderBookDO> getOrderBookDOs() {
 		return orderBookDOs;
 	}
 
 	public void setOrderBookDOs(Set<OrderBookDO> orderBookDOs) {
 		this.orderBookDOs = orderBookDOs;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 }

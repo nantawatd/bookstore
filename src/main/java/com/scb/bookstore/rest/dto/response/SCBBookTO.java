@@ -1,10 +1,10 @@
-package com.scb.bookstore.rest.dto;
+package com.scb.bookstore.rest.dto.response;
 
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class SCBBook implements Serializable{
+public class SCBBookTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private double price;

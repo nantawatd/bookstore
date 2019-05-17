@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scb.bookstore.rest.dto.UserOrderTO;
-import com.scb.bookstore.rest.dto.UserTO;
+import com.scb.bookstore.rest.dto.request.UserOrderTO;
+import com.scb.bookstore.rest.dto.request.UserTO;
+import com.scb.bookstore.rest.dto.response.OrderPriceTO;
 import com.scb.bookstore.service.BookService;
 import com.scb.bookstore.service.UserService;
 import com.scb.bookstore.service.exception.BookstoreException;
@@ -41,8 +42,8 @@ public class UserController {
 
 	@ApiOperation(value = "Order books", response = Void.class)
 	@PostMapping("/user/orders")
-	public void orderBook(UserOrderTO order) throws BookstoreException {
-		userService.orderBook(order);
+	public OrderPriceTO orderBook(UserOrderTO order) throws BookstoreException {
+		return userService.orderBook(order);
 	}
 
 	@ApiOperation(value = "View a user by ID", response = UserTO.class)

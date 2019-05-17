@@ -2,8 +2,8 @@ package com.scb.bookstore.service;
 
 import java.util.List;
 
-import com.scb.bookstore.rest.dto.SCBBook;
+import com.scb.bookstore.rest.dto.response.SCBBookTO;
 
 public interface BookService {
-	public List<SCBBook> getBooks();
+	public List<SCBBookTO> getBooks();
 }

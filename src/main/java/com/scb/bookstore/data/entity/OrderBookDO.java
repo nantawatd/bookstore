@@ -17,10 +17,6 @@ public class OrderBookDO {
 	@JoinColumn(name = "order_id", insertable = false, updatable = false)
 	private OrderDO orderDO;
 
-//	@ManyToOne
-//	@JoinColumn(name = "book_id", insertable = false, updatable = false)
-//	private BookDO bookDO;
-
 	public OrderBookDO() {}
 
 	public OrderBookDO(Long bookID, Long orderID) {

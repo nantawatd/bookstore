@@ -16,7 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.scb.bookstore.rest.dto.UserTO;
+import com.scb.bookstore.rest.dto.request.UserTO;
 
 @Entity
 @Table(name = "user")
