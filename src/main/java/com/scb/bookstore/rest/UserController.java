@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.scb.bookstore.rest.dto.UserOrderTO;
 import com.scb.bookstore.rest.dto.UserTO;
 import com.scb.bookstore.service.BookService;
 import com.scb.bookstore.service.UserService;
@@ -32,10 +33,16 @@ public class UserController {
 		userService.createUser(user);
 	}
 
-	@ApiOperation(value = "Create user", response = Void.class)
+	@ApiOperation(value = "Delete user", response = Void.class)
 	@DeleteMapping("/user")
 	public void deleteUser() throws BookstoreException {
 		userService.deleteUser();
+	}
+
+	@ApiOperation(value = "Order books", response = Void.class)
+	@PostMapping("/user/orders")
+	public void orderBook(UserOrderTO order) throws BookstoreException {
+		userService.orderBook(order);
 	}
 
 	@ApiOperation(value = "View a user by ID", response = UserTO.class)

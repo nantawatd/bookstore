@@ -1,5 +1,6 @@
 package com.scb.bookstore.service.impl;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -12,10 +13,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.scb.bookstore.config.model.BookStoreUserDetails;
+import com.scb.bookstore.data.entity.OrderBookDO;
+import com.scb.bookstore.data.entity.OrderDO;
 import com.scb.bookstore.data.entity.UserDO;
+import com.scb.bookstore.data.repository.OrderBookRepository;
+import com.scb.bookstore.data.repository.OrderRepository;
 import com.scb.bookstore.data.repository.RoleRepository;
 import com.scb.bookstore.data.repository.UserRepository;
 import com.scb.bookstore.rest.dto.Role;
+import com.scb.bookstore.rest.dto.UserOrderTO;
 import com.scb.bookstore.rest.dto.UserTO;
 import com.scb.bookstore.service.UserService;
 import com.scb.bookstore.service.exception.BookstoreErrorMessage;
@@ -32,6 +38,12 @@ public class UserServiceImpl implements UserService{
 
 	@Autowired
 	private RoleRepository roleRepository;
+
+	@Autowired
+	private OrderRepository orderRepository;
+
+	@Autowired
+	private OrderBookRepository orderBookRepository;
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -64,23 +76,39 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void deleteUser() throws BookstoreException{
+	public void deleteUser() throws BookstoreException {
 		LOG.info("remove the user account.");
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null) {
-			Long userId = ((BookStoreUserDetails) auth.getPrincipal()).getUserId();
+		Optional<UserDO> userDO = getUserByAuthentication();
+		if (userDO.isPresent()) {
+			LOG.info("delete user");
+			userRepository.delete(userDO.get());
+		} else {
+			throw new BookstoreException(BookstoreErrorMessage.USER_NOT_FOUND);
+		}
 
-			Optional<UserDO> userDO = userRepository.findById(userId);
-			if(userDO.isPresent()) {
-				LOG.info("delete user");
-				userRepository.delete(userDO.get());
-			} else {
-				throw new BookstoreException(BookstoreErrorMessage.USER_NOT_FOUND);
-			}
+		LOG.info("log out");
+		SecurityContextHolder.getContext().setAuthentication(null);
+	}
 
-			LOG.info("log out");
-			SecurityContextHolder.getContext().setAuthentication(null);
+	@Override
+	public void orderBook(UserOrderTO order) throws BookstoreException {
+		Optional<UserDO> userDO = getUserByAuthentication();
+		if (userDO.isPresent()) {
+
+			LOG.info("save customer order.");
+			OrderDO orderDO = new OrderDO(userDO.get(), new Date(), "PENDING");
+			orderDO = orderRepository.save(orderDO);
+			Long orderId = orderDO.getId();
+
+			order.getBookIds().forEach(bookId -> {
+				OrderBookDO orderBookDO = new OrderBookDO(bookId, orderId);
+				orderBookRepository.save(orderBookDO);
+			});
+
+
+		} else {
+			throw new BookstoreException(BookstoreErrorMessage.USER_NOT_FOUND);
 		}
 	}
 
@@ -95,4 +123,16 @@ public class UserServiceImpl implements UserService{
 			throw new BookstoreException(BookstoreErrorMessage.USER_NOT_FOUND);
 		}
 	}
+
+	private Optional<UserDO> getUserByAuthentication() throws BookstoreException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			Long userId = ((BookStoreUserDetails) auth.getPrincipal()).getUserId();
+			Optional<UserDO> userDO = userRepository.findById(userId);
+			return userDO;
+		} else {
+			throw new BookstoreException(BookstoreErrorMessage.USER_NOT_FOUND);
+		}
+	}
+
 }

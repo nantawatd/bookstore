@@ -20,7 +20,7 @@ public class RoleDO {
 	private String role;
 
 	@OneToMany(mappedBy = "roleDO")
-	private Set<UserDO> userDO;
+	private Set<UserDO> userDOs;
 
 	public Long getId() {
 		return id;
@@ -38,11 +38,11 @@ public class RoleDO {
 		this.role = role;
 	}
 
-	public Set<UserDO> getUserDO() {
-		return userDO;
+	public Set<UserDO> getUserDOs() {
+		return userDOs;
 	}
 
-	public void setUserDO(Set<UserDO> userDO) {
-		this.userDO = userDO;
+	public void setUserDOs(Set<UserDO> userDOs) {
+		this.userDOs = userDOs;
 	}
 }

@@ -1,7 +1,11 @@
 package com.scb.bookstore.data.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.scb.bookstore.rest.dto.UserTO;
@@ -23,7 +28,8 @@ public class UserDO {
 
 	private String username;
 	private String password;
-	private String alias;
+	private String name;
+	private String surname;
 
 	@Column(name = "date_of_birth")
 	private Date dateOfBirth;
@@ -34,6 +40,9 @@ public class UserDO {
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	private RoleDO roleDO;
+
+	@OneToMany(mappedBy = "userDO", cascade = CascadeType.ALL)
+	private Set<OrderDO> orderDOs;
 
 	public Long getId() {
 		return id;
@@ -67,14 +76,6 @@ public class UserDO {
 		this.dateCreated = dateCreated;
 	}
 
-	public String getAlias() {
-		return alias;
-	}
-
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
-
 	public Date getDateOfBirth() {
 		return dateOfBirth;
 	}
@@ -95,7 +96,8 @@ public class UserDO {
 		UserDO userDO = new UserDO();
 		userDO.setUsername(userTO.getUsername());
 		userDO.setPassword(userTO.getPassword());
-		userDO.setAlias(userTO.getAlias());
+		userDO.setName(userTO.getName());
+		userDO.setSurname(userTO.getSurname());
 		userDO.setDateOfBirth(userTO.getDateOfBirth());
 		userDO.setDateCreated(new Date());
 		return userDO;
@@ -103,10 +105,44 @@ public class UserDO {
 
 	public UserTO toUserTO() {
 		UserTO userTO = new UserTO();
-		userTO.setAlias(alias);
+		userTO.setName(name);
+		userTO.setSurname(surname);
 		userTO.setDateOfBirth(dateOfBirth);
 		userTO.setUsername(username);
 		userTO.setId(id);
+
+		List<Long> bookIds = new ArrayList<>();
+		orderDOs.forEach(orderDo ->
+			orderDo.getOrderBookDOs().forEach(orderBook -> {
+				bookIds.add(orderBook.getId().getBookID());
+			})
+		);
+		userTO.setBookIds(bookIds);
+
 		return userTO;
+	}
+
+	public Set<OrderDO> getOrderDOs() {
+		return orderDOs;
+	}
+
+	public void setOrderDOs(Set<OrderDO> orderDOs) {
+		this.orderDOs = orderDOs;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
 	}
 }
