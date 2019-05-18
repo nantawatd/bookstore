@@ -111,13 +111,15 @@ public class UserDO {
 		userTO.setUsername(username);
 		userTO.setId(id);
 
-		List<Long> bookIds = new ArrayList<>();
-		orderDOs.forEach(orderDo ->
-			orderDo.getOrderBookDOs().forEach(orderBook -> {
-				bookIds.add(orderBook.getId().getBookID());
-			})
-		);
-		userTO.setBookIds(bookIds);
+		if(orderDOs != null) {
+			List<Long> bookIds = new ArrayList<>();
+			orderDOs.forEach(orderDo ->
+				orderDo.getOrderBookDOs().forEach(orderBook -> {
+					bookIds.add(orderBook.getId().getBookID());
+				})
+			);
+			userTO.setBookIds(bookIds);
+		}
 
 		return userTO;
 	}

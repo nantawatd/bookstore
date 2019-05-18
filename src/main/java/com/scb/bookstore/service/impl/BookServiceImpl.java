@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 import com.scb.bookstore.config.CachingConfig;
 import com.scb.bookstore.rest.dto.response.SCBBookTO;
 import com.scb.bookstore.service.BookService;
+import com.scb.bookstore.service.exception.BookstoreErrorMessage;
+import com.scb.bookstore.service.exception.BookstoreException;
 
 @Service
 public class BookServiceImpl implements BookService{
@@ -33,23 +35,28 @@ public class BookServiceImpl implements BookService{
 
 	@Cacheable(cacheNames = CachingConfig.BOOK_CACHE, key = "'" + CachingConfig.BOOK_CACHE_KEY + "'")
 	@Override
-	public List<SCBBookTO> getBooks() {
-		// get all books
-		List<SCBBookTO> scbAllBooks = getBooksFromSCBByUrl(allBooksUrl);
+	public List<SCBBookTO> getBooks() throws BookstoreException {
+		try {
+			// get all books
+			List<SCBBookTO> scbAllBooks = getBooksFromSCBByUrl(allBooksUrl);
 
-		// get recommend books
-		List<SCBBookTO> scbRecommendBooks = getBooksFromSCBByUrl(recommendBooksUrl);
+			// get recommend books
+			List<SCBBookTO> scbRecommendBooks = getBooksFromSCBByUrl(recommendBooksUrl);
 
-		scbAllBooks = scbAllBooks.stream().map(book -> {
-			scbRecommendBooks.parallelStream().forEach(rec -> {
-				if(rec.getId() == book.getId()) {
-					book.setRecommended(true);
-				}
-			});
-			return book;
-		}).collect(Collectors.toList());
+			scbAllBooks = scbAllBooks.stream().map(book -> {
+				scbRecommendBooks.parallelStream().forEach(rec -> {
+					if(rec.getId() == book.getId()) {
+						book.setRecommended(true);
+					}
+				});
+				return book;
+			}).collect(Collectors.toList());
 
-		return scbAllBooks;
+			return scbAllBooks;
+
+		} catch (Exception e) {
+			throw new BookstoreException(BookstoreErrorMessage.FAIL_TO_CALL_SCB_ENDPOINT);
+		}
 	}
 
 	private List<SCBBookTO> getBooksFromSCBByUrl(String scbBookUrl) {

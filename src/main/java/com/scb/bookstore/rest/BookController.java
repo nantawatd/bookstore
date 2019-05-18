@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.scb.bookstore.rest.dto.response.SCBBookTO;
 import com.scb.bookstore.service.BookService;
+import com.scb.bookstore.service.exception.BookstoreException;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +26,7 @@ public class BookController {
 
 	@ApiOperation(value = "View a list of available books from SCB", response = List.class)
 	@GetMapping("/books")
-	public List<SCBBookTO> getBooks() {
+	public List<SCBBookTO> getBooks() throws BookstoreException {
 		return bookService.getBooks();
 	}
 }

@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import com.scb.bookstore.service.BookService;
+import com.scb.bookstore.service.exception.BookstoreException;
 
 @Component
 public class InitBookCache implements ApplicationListener<ApplicationReadyEvent> {
@@ -20,6 +21,10 @@ public class InitBookCache implements ApplicationListener<ApplicationReadyEvent>
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		LOG.info("initial book data.");
-		bookService.getBooks();
+		try {
+			bookService.getBooks();
+		} catch (BookstoreException e) {
+			LOG.error(e.getMessage());
+		}
 	}
 }
