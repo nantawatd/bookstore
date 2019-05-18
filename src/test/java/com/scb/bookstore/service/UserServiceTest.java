@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.scb.bookstore.service;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
