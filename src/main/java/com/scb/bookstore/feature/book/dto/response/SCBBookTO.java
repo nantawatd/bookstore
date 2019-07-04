@@ -1,4 +1,4 @@
-package com.scb.bookstore.rest.dto.response;
+package com.scb.bookstore.feature.book.dto.response;
 
 import java.io.Serializable;
 

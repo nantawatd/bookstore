@@ -1,4 +1,4 @@
-package com.scb.bookstore.service.impl;
+package com.scb.bookstore.feature.book.service.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.scb.bookstore.config.CachingConfig;
-import com.scb.bookstore.rest.dto.response.SCBBookTO;
-import com.scb.bookstore.service.BookService;
-import com.scb.bookstore.service.exception.BookstoreErrorMessage;
-import com.scb.bookstore.service.exception.BookstoreException;
+import com.scb.bookstore.exception.BookstoreErrorMessage;
+import com.scb.bookstore.exception.BookstoreException;
+import com.scb.bookstore.feature.book.dto.response.SCBBookTO;
+import com.scb.bookstore.feature.book.service.BookService;
 
 @Service
 public class BookServiceImpl implements BookService{

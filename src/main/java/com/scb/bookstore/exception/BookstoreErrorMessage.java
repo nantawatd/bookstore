@@ -1,4 +1,4 @@
-package com.scb.bookstore.service.exception;
+package com.scb.bookstore.exception;
 
 public class BookstoreErrorMessage {
 	public static final String USER_DUPLICATE = "Username is duplicated.";

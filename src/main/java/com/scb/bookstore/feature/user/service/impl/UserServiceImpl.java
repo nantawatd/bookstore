@@ -1,4 +1,4 @@
-package com.scb.bookstore.service.impl;
+package com.scb.bookstore.feature.user.service.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.scb.bookstore.config.CachingConfig;
 import com.scb.bookstore.config.model.BookStoreUserDetails;
+import com.scb.bookstore.constant.Role;
 import com.scb.bookstore.data.entity.OrderBookDO;
 import com.scb.bookstore.data.entity.OrderDO;
 import com.scb.bookstore.data.entity.UserDO;
@@ -25,14 +26,13 @@ import com.scb.bookstore.data.repository.OrderBookRepository;
 import com.scb.bookstore.data.repository.OrderRepository;
 import com.scb.bookstore.data.repository.RoleRepository;
 import com.scb.bookstore.data.repository.UserRepository;
-import com.scb.bookstore.rest.dto.Role;
-import com.scb.bookstore.rest.dto.request.UserOrderTO;
-import com.scb.bookstore.rest.dto.request.UserTO;
-import com.scb.bookstore.rest.dto.response.OrderPriceTO;
-import com.scb.bookstore.rest.dto.response.SCBBookTO;
-import com.scb.bookstore.service.UserService;
-import com.scb.bookstore.service.exception.BookstoreErrorMessage;
-import com.scb.bookstore.service.exception.BookstoreException;
+import com.scb.bookstore.exception.BookstoreErrorMessage;
+import com.scb.bookstore.exception.BookstoreException;
+import com.scb.bookstore.feature.book.dto.response.OrderPriceTO;
+import com.scb.bookstore.feature.book.dto.response.SCBBookTO;
+import com.scb.bookstore.feature.user.dto.request.UserOrderTO;
+import com.scb.bookstore.feature.user.dto.request.UserTO;
+import com.scb.bookstore.feature.user.service.UserService;
 
 @Service
 @Transactional

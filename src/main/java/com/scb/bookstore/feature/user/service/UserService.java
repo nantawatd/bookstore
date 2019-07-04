@@ -1,9 +1,9 @@
-package com.scb.bookstore.service;
+package com.scb.bookstore.feature.user.service;
 
-import com.scb.bookstore.rest.dto.request.UserOrderTO;
-import com.scb.bookstore.rest.dto.request.UserTO;
-import com.scb.bookstore.rest.dto.response.OrderPriceTO;
-import com.scb.bookstore.service.exception.BookstoreException;
+import com.scb.bookstore.exception.BookstoreException;
+import com.scb.bookstore.feature.book.dto.response.OrderPriceTO;
+import com.scb.bookstore.feature.user.dto.request.UserOrderTO;
+import com.scb.bookstore.feature.user.dto.request.UserTO;
 
 public interface UserService {
 	public UserTO getUserById(Long id) throws BookstoreException;

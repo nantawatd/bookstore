@@ -27,10 +27,10 @@ import com.scb.bookstore.data.entity.RoleDO;
 import com.scb.bookstore.data.entity.UserDO;
 import com.scb.bookstore.data.repository.RoleRepository;
 import com.scb.bookstore.data.repository.UserRepository;
-import com.scb.bookstore.rest.dto.request.UserTO;
-import com.scb.bookstore.service.exception.BookstoreErrorMessage;
-import com.scb.bookstore.service.exception.BookstoreException;
-import com.scb.bookstore.service.impl.UserServiceImpl;
+import com.scb.bookstore.exception.BookstoreErrorMessage;
+import com.scb.bookstore.exception.BookstoreException;
+import com.scb.bookstore.feature.user.dto.request.UserTO;
+import com.scb.bookstore.feature.user.service.impl.UserServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {

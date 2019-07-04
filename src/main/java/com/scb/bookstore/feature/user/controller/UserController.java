@@ -1,4 +1,4 @@
-package com.scb.bookstore.rest;
+package com.scb.bookstore.feature.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scb.bookstore.rest.dto.request.UserOrderTO;
-import com.scb.bookstore.rest.dto.request.UserTO;
-import com.scb.bookstore.rest.dto.response.OrderPriceTO;
-import com.scb.bookstore.service.BookService;
-import com.scb.bookstore.service.UserService;
-import com.scb.bookstore.service.exception.BookstoreException;
+import com.scb.bookstore.exception.BookstoreException;
+import com.scb.bookstore.feature.book.dto.response.OrderPriceTO;
+import com.scb.bookstore.feature.book.service.BookService;
+import com.scb.bookstore.feature.user.dto.request.UserOrderTO;
+import com.scb.bookstore.feature.user.dto.request.UserTO;
+import com.scb.bookstore.feature.user.service.UserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

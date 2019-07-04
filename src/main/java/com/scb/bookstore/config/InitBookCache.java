@@ -7,8 +7,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.scb.bookstore.service.BookService;
-import com.scb.bookstore.service.exception.BookstoreException;
+import com.scb.bookstore.exception.BookstoreException;
+import com.scb.bookstore.feature.book.service.BookService;
 
 @Component
 public class InitBookCache implements ApplicationListener<ApplicationReadyEvent> {

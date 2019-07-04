@@ -1,4 +1,4 @@
-package com.scb.bookstore.rest;
+package com.scb.bookstore.feature.book.controller;
 
 import java.util.List;
 
@@ -7,9 +7,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scb.bookstore.rest.dto.response.SCBBookTO;
-import com.scb.bookstore.service.BookService;
-import com.scb.bookstore.service.exception.BookstoreException;
+import com.scb.bookstore.exception.BookstoreException;
+import com.scb.bookstore.feature.book.dto.response.SCBBookTO;
+import com.scb.bookstore.feature.book.service.BookService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

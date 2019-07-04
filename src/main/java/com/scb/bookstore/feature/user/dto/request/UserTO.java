@@ -1,4 +1,4 @@
-package com.scb.bookstore.rest.dto.request;
+package com.scb.bookstore.feature.user.dto.request;
 
 import java.util.Date;
 import java.util.List;
