@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService{
 		if (userDO.isPresent()) {
 			return userDO.get().toUserTO();
 		} else {
-			throw new BookstoreException(BookstoreErrorMessage.USER_NOT_FOUND);
+			throw new BookstoreException("999", BookstoreErrorMessage.USER_NOT_FOUND);
 		}
 	}
 
